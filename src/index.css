@@ -1,0 +1,98 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply font-sans antialiased bg-white text-brand-black transition-colors duration-300;
+    @apply dark:bg-brand-black dark:text-white;
+  }
+  ::selection {
+    @apply bg-brand-pink text-white;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-2.5 font-medium transition-all duration-300 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .btn-primary {
+    @apply btn bg-brand-pink text-white hover:bg-brand-pink-dark hover:shadow-glow;
+  }
+  .btn-outline {
+    @apply btn border-2 border-brand-pink text-brand-pink hover:bg-brand-pink hover:text-white;
+  }
+  .btn-dark {
+    @apply btn bg-brand-black text-white hover:bg-brand-black-soft;
+    @apply dark:bg-white dark:text-brand-black dark:hover:bg-gray-200;
+  }
+  .btn-ghost {
+    @apply btn text-brand-black hover:bg-brand-pink-soft;
+    @apply dark:text-white dark:hover:bg-brand-black-soft;
+  }
+  .input {
+    @apply w-full rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-brand-black outline-none transition focus:border-brand-pink focus:ring-2 focus:ring-brand-pink/20;
+    @apply dark:bg-brand-black-soft dark:border-gray-700 dark:text-white;
+  }
+  .label {
+    @apply mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300;
+  }
+  .card-glass {
+    @apply rounded-2xl border border-white/40 bg-white/70 shadow-card backdrop-blur-md;
+    @apply dark:bg-brand-black-soft/60 dark:border-white/10;
+  }
+  .badge {
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold;
+  }
+  .container-app {
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+  .section {
+    @apply py-12 md:py-20;
+  }
+  .heading {
+    @apply font-display text-3xl font-bold md:text-4xl lg:text-5xl;
+  }
+  .skeleton {
+    @apply relative overflow-hidden bg-gray-200 dark:bg-gray-700;
+  }
+  .skeleton::after {
+    content: '';
+    @apply absolute inset-0 -translate-x-full animate-shimmer;
+    background-image: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.4),
+      transparent
+    );
+    background-size: 200% 100%;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-brand-pink/60 rounded-full;
+}
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-brand-pink;
+}
+
+/* Hide arrows on number input */
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type='number'] {
+  -moz-appearance: textfield;
+}

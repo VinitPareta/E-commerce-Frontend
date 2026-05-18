@@ -1,0 +1,309 @@
+import { useEffect, useState } from 'react';
+import { useParams, Link, useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { FiHeart, FiShoppingBag, FiMinus, FiPlus, FiStar, FiTruck, FiShield } from 'react-icons/fi';
+import api from '../utils/api';
+import Loader from '../components/Loader';
+import {
+  formatPrice,
+  getEffectivePrice,
+  calcDiscountPercent,
+  buildImageUrl,
+} from '../utils/helpers';
+import { useCart } from '../context/CartContext';
+import { useWishlist } from '../context/WishlistContext';
+
+const ProductDetails = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const { addToCart } = useCart();
+  const { toggle, isInWishlist } = useWishlist();
+
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [activeImg, setActiveImg] = useState(0);
+  const [size, setSize] = useState('');
+  const [color, setColor] = useState('');
+  const [qty, setQty] = useState(1);
+
+  useEffect(() => {
+    const load = async () => {
+      try {
+        setLoading(true);
+        const { data } = await api.get(`/products/${id}`);
+        setProduct(data.product);
+        setSize(data.product.sizes?.[0] || '');
+        setColor(data.product.colors?.[0] || '');
+      } catch (err) {
+        // silent
+      } finally {
+        setLoading(false);
+      }
+    };
+    load();
+  }, [id]);
+
+  if (loading) return <Loader fullScreen />;
+  if (!product) {
+    return (
+      <div className="container-app py-20 text-center">
+        <p className="text-2xl font-semibold">Product not found</p>
+        <Link to="/shop" className="btn-primary mt-4 inline-flex">
+          Back to Shop
+        </Link>
+      </div>
+    );
+  }
+
+  const discount = calcDiscountPercent(product);
+  const inWishlist = isInWishlist(product._id);
+
+  const handleAdd = async () => {
+    const ok = await addToCart(product._id, qty, size, color);
+    if (ok) navigate('/cart');
+  };
+
+  return (
+    <div className="container-app py-8">
+      <nav className="mb-6 text-sm text-gray-500">
+        <Link to="/" className="hover:text-brand-pink">Home</Link>
+        <span className="mx-2">/</span>
+        <Link to="/shop" className="hover:text-brand-pink">Shop</Link>
+        <span className="mx-2">/</span>
+        <Link
+          to={`/shop?category=${product.category}`}
+          className="hover:text-brand-pink"
+        >
+          {product.category}
+        </Link>
+        <span className="mx-2">/</span>
+        <span className="text-brand-black dark:text-white">{product.name}</span>
+      </nav>
+
+      <div className="grid gap-10 lg:grid-cols-2">
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+        >
+          <div className="overflow-hidden rounded-3xl bg-brand-pink-soft dark:bg-brand-black-soft">
+            <img
+              src={buildImageUrl(product.images?.[activeImg])}
+              alt={product.name}
+              className="aspect-square w-full object-cover"
+              onError={(e) => {
+                e.target.src =
+                  'https://placehold.co/600x600/FFE0EC/D63A75?text=DS+Store';
+              }}
+            />
+          </div>
+          {product.images?.length > 1 && (
+            <div className="mt-4 flex gap-3 overflow-x-auto">
+              {product.images.map((img, i) => (
+                <button
+                  key={i}
+                  onClick={() => setActiveImg(i)}
+                  className={`h-20 w-20 flex-shrink-0 overflow-hidden rounded-xl border-2 transition ${
+                    i === activeImg
+                      ? 'border-brand-pink'
+                      : 'border-transparent opacity-70'
+                  }`}
+                >
+                  <img
+                    src={buildImageUrl(img)}
+                    alt=""
+                    className="h-full w-full object-cover"
+                  />
+                </button>
+              ))}
+            </div>
+          )}
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          className="flex flex-col"
+        >
+          <p className="text-sm uppercase tracking-wide text-brand-pink">
+            {product.category} • {product.subCategory}
+          </p>
+          <h1 className="mt-2 font-display text-3xl font-bold md:text-4xl">
+            {product.name}
+          </h1>
+
+          {product.rating > 0 && (
+            <div className="mt-2 flex items-center gap-2 text-sm">
+              <span className="flex items-center gap-1 rounded-full bg-yellow-100 px-2.5 py-0.5 text-yellow-700">
+                <FiStar className="fill-yellow-500 text-yellow-500" />
+                {product.rating.toFixed(1)}
+              </span>
+              <span className="text-gray-500">
+                ({product.numReviews} reviews)
+              </span>
+            </div>
+          )}
+
+          <div className="mt-5 flex items-end gap-3">
+            <p className="text-3xl font-bold text-brand-pink md:text-4xl">
+              {formatPrice(getEffectivePrice(product))}
+            </p>
+            {discount > 0 && (
+              <>
+                <p className="text-lg text-gray-400 line-through">
+                  {formatPrice(product.price)}
+                </p>
+                <span className="badge bg-brand-pink/10 text-brand-pink">
+                  {discount}% OFF
+                </span>
+              </>
+            )}
+          </div>
+
+          <p className="mt-6 leading-relaxed text-gray-600 dark:text-gray-300">
+            {product.description}
+          </p>
+
+          {product.sizes?.length > 0 && (
+            <div className="mt-6">
+              <p className="mb-2 font-semibold">Size</p>
+              <div className="flex flex-wrap gap-2">
+                {product.sizes.map((s) => (
+                  <button
+                    key={s}
+                    onClick={() => setSize(s)}
+                    className={`min-w-[3rem] rounded-xl border-2 px-4 py-2 text-sm font-medium transition ${
+                      s === size
+                        ? 'border-brand-pink bg-brand-pink text-white'
+                        : 'border-gray-200 hover:border-brand-pink dark:border-gray-700'
+                    }`}
+                  >
+                    {s}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {product.colors?.length > 0 && (
+            <div className="mt-6">
+              <p className="mb-2 font-semibold">Color</p>
+              <div className="flex flex-wrap gap-2">
+                {product.colors.map((c) => (
+                  <button
+                    key={c}
+                    onClick={() => setColor(c)}
+                    className={`rounded-xl border-2 px-4 py-2 text-sm font-medium transition ${
+                      c === color
+                        ? 'border-brand-pink bg-brand-pink text-white'
+                        : 'border-gray-200 hover:border-brand-pink dark:border-gray-700'
+                    }`}
+                  >
+                    {c}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div className="mt-6 flex items-center gap-4">
+            <p className="font-semibold">Quantity:</p>
+            <div className="flex items-center rounded-full border-2 border-gray-200 dark:border-gray-700">
+              <button
+                onClick={() => setQty(Math.max(1, qty - 1))}
+                className="p-2.5"
+                disabled={qty <= 1}
+              >
+                <FiMinus />
+              </button>
+              <span className="w-10 text-center font-semibold">{qty}</span>
+              <button
+                onClick={() => setQty(qty + 1)}
+                className="p-2.5"
+                disabled={qty >= product.stock}
+              >
+                <FiPlus />
+              </button>
+            </div>
+            <p
+              className={`text-sm font-medium ${
+                product.inStock ? 'text-green-600' : 'text-red-500'
+              }`}
+            >
+              {product.inStock
+                ? `${product.stock} in stock`
+                : 'Out of stock'}
+            </p>
+          </div>
+
+          <div className="mt-7 flex flex-wrap gap-3">
+            <button
+              onClick={handleAdd}
+              disabled={!product.inStock}
+              className="btn-primary flex-1"
+            >
+              <FiShoppingBag /> Add to Cart
+            </button>
+            <button
+              onClick={() => toggle(product._id)}
+              className={`btn ${
+                inWishlist
+                  ? 'bg-brand-pink text-white'
+                  : 'btn-outline'
+              }`}
+              aria-label="Toggle wishlist"
+            >
+              <FiHeart className={inWishlist ? 'fill-white' : ''} />
+            </button>
+          </div>
+
+          <div className="mt-8 grid gap-3 sm:grid-cols-2">
+            <div className="flex items-center gap-3 rounded-2xl border border-gray-100 p-3 dark:border-white/10">
+              <FiTruck className="text-xl text-brand-pink" />
+              <div>
+                <p className="text-sm font-semibold">Free Shipping</p>
+                <p className="text-xs text-gray-500">Above ₹1000</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3 rounded-2xl border border-gray-100 p-3 dark:border-white/10">
+              <FiShield className="text-xl text-brand-pink" />
+              <div>
+                <p className="text-sm font-semibold">Secure Payment</p>
+                <p className="text-xs text-gray-500">100% safe</p>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      </div>
+
+      {product.reviews?.length > 0 && (
+        <section className="mt-16">
+          <h2 className="heading text-2xl">Customer Reviews</h2>
+          <div className="mt-5 space-y-4">
+            {product.reviews.map((r, i) => (
+              <div key={i} className="card-glass p-5">
+                <div className="flex items-start gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-pink text-white">
+                    {r.name?.charAt(0).toUpperCase()}
+                  </div>
+                  <div>
+                    <p className="font-semibold">{r.name}</p>
+                    <div className="flex items-center gap-1 text-yellow-500">
+                      {Array.from({ length: r.rating }).map((_, n) => (
+                        <FiStar key={n} className="fill-yellow-500" />
+                      ))}
+                    </div>
+                    <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">
+                      {r.comment}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+    </div>
+  );
+};
+
+export default ProductDetails;
