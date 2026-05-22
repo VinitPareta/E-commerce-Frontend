@@ -51,7 +51,7 @@ const Register = () => {
       >
         <div className="card-glass p-8">
           <div className="mb-6 text-center">
-            <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-pink to-brand-pink-dark text-lg font-extrabold text-white shadow-soft">
+            <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-green to-brand-green-dark text-lg font-extrabold text-white shadow-soft">
               DS
             </div>
             <h1 className="font-display text-3xl font-bold">Create Account</h1>
@@ -130,7 +130,7 @@ const Register = () => {
 
           <p className="mt-6 text-center text-sm text-gray-500">
             Already have an account?{' '}
-            <Link to="/login" className="font-semibold text-brand-pink hover:underline">
+            <Link to="/login" className="font-semibold text-brand-green hover:underline">
               Sign in
             </Link>
           </p>

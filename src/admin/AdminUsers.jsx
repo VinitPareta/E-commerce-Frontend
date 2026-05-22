@@ -49,7 +49,7 @@ const AdminUsers = () => {
         className="overflow-x-auto rounded-2xl bg-white shadow-card dark:bg-brand-black-soft"
       >
         <table className="w-full text-sm">
-          <thead className="bg-brand-pink-soft text-left text-xs uppercase text-brand-pink-dark dark:bg-brand-black">
+          <thead className="bg-brand-green-soft text-left text-xs uppercase text-brand-green-dark dark:bg-brand-black">
             <tr>
               <th className="px-4 py-3">Name</th>
               <th className="px-4 py-3">Email</th>
@@ -62,11 +62,11 @@ const AdminUsers = () => {
             {users.map((u) => (
               <tr
                 key={u._id}
-                className="border-t border-gray-100 hover:bg-brand-pink-soft/20 dark:border-white/10 dark:hover:bg-brand-black"
+                className="border-t border-gray-100 hover:bg-brand-green-soft/20 dark:border-white/10 dark:hover:bg-brand-black"
               >
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-3">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-pink text-sm font-bold text-white">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-green text-sm font-bold text-white">
                       {u.name.charAt(0).toUpperCase()}
                     </div>
                     <p className="font-medium">{u.name}</p>
@@ -77,7 +77,7 @@ const AdminUsers = () => {
                   <span
                     className={`badge ${
                       u.role === 'admin'
-                        ? 'bg-brand-pink/10 text-brand-pink'
+                        ? 'bg-brand-green/10 text-brand-green'
                         : 'bg-gray-100 text-gray-700 dark:bg-brand-black dark:text-gray-300'
                     }`}
                   >

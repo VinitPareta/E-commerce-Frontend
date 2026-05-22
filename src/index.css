@@ -11,7 +11,7 @@
     @apply dark:bg-brand-black dark:text-white;
   }
   ::selection {
-    @apply bg-brand-pink text-white;
+    @apply bg-brand-green text-white;
   }
 }
 
@@ -20,21 +20,21 @@
     @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-2.5 font-medium transition-all duration-300 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed;
   }
   .btn-primary {
-    @apply btn bg-brand-pink text-white hover:bg-brand-pink-dark hover:shadow-glow;
+    @apply btn bg-brand-green text-white hover:bg-brand-green-dark hover:shadow-glow;
   }
   .btn-outline {
-    @apply btn border-2 border-brand-pink text-brand-pink hover:bg-brand-pink hover:text-white;
+    @apply btn border-2 border-brand-green text-brand-green hover:bg-brand-green hover:text-white;
   }
   .btn-dark {
     @apply btn bg-brand-black text-white hover:bg-brand-black-soft;
     @apply dark:bg-white dark:text-brand-black dark:hover:bg-gray-200;
   }
   .btn-ghost {
-    @apply btn text-brand-black hover:bg-brand-pink-soft;
+    @apply btn text-brand-black hover:bg-brand-green-soft;
     @apply dark:text-white dark:hover:bg-brand-black-soft;
   }
   .input {
-    @apply w-full rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-brand-black outline-none transition focus:border-brand-pink focus:ring-2 focus:ring-brand-pink/20;
+    @apply w-full rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-brand-black outline-none transition focus:border-brand-green focus:ring-2 focus:ring-brand-green/20;
     @apply dark:bg-brand-black-soft dark:border-gray-700 dark:text-white;
   }
   .label {
@@ -56,19 +56,46 @@
   .heading {
     @apply font-display text-3xl font-bold md:text-4xl lg:text-5xl;
   }
+
+  /* ── Skeleton shimmer ── */
   .skeleton {
-    @apply relative overflow-hidden bg-gray-200 dark:bg-gray-700;
+    position: relative;
+    overflow: hidden;
+    background-color: #e5e7eb;
+  }
+  .dark .skeleton {
+    background-color: #1f2a24;
   }
   .skeleton::after {
-    content: '';
-    @apply absolute inset-0 -translate-x-full animate-shimmer;
-    background-image: linear-gradient(
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
       90deg,
-      transparent,
-      rgba(255, 255, 255, 0.4),
-      transparent
+      transparent 0%,
+      rgba(255, 255, 255, 0.45) 50%,
+      transparent 100%
     );
     background-size: 200% 100%;
+    animation: skeleton-wave 2s ease-in-out infinite;
+  }
+  .dark .skeleton::after {
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.06) 50%,
+      transparent 100%
+    );
+    background-size: 200% 100%;
+  }
+}
+
+@keyframes skeleton-wave {
+  0% {
+    background-position: 200% center;
+  }
+  100% {
+    background-position: -200% center;
   }
 }
 
@@ -81,18 +108,18 @@
   @apply bg-transparent;
 }
 ::-webkit-scrollbar-thumb {
-  @apply bg-brand-pink/60 rounded-full;
+  @apply bg-brand-green/60 rounded-full;
 }
 ::-webkit-scrollbar-thumb:hover {
-  @apply bg-brand-pink;
+  @apply bg-brand-green;
 }
 
 /* Hide arrows on number input */
-input[type='number']::-webkit-outer-spin-button,
-input[type='number']::-webkit-inner-spin-button {
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
-input[type='number'] {
+input[type="number"] {
   -moz-appearance: textfield;
 }

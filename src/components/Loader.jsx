@@ -6,7 +6,7 @@ const Loader = ({ size = 'md', fullScreen = false }) => {
   };
   const spinner = (
     <div
-      className={`${sizes[size]} animate-spin rounded-full border-brand-pink border-t-transparent`}
+      className={`${sizes[size]} animate-spin rounded-full border-brand-green border-t-transparent`}
     />
   );
   if (fullScreen) {

@@ -1,12 +1,16 @@
-import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import toast from 'react-hot-toast';
-import { FiArrowRight } from 'react-icons/fi';
-import api from '../utils/api';
-import { useCart } from '../context/CartContext';
-import { useAuth } from '../context/AuthContext';
-import { formatPrice, getEffectivePrice, buildImageUrl } from '../utils/helpers';
+import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import toast from "react-hot-toast";
+import { FiArrowRight } from "react-icons/fi";
+import api from "../utils/api";
+import { useCart } from "../context/CartContext";
+import { useAuth } from "../context/AuthContext";
+import {
+  formatPrice,
+  getEffectivePrice,
+  buildImageUrl,
+} from "../utils/helpers";
 
 const Checkout = () => {
   const navigate = useNavigate();
@@ -15,14 +19,14 @@ const Checkout = () => {
   const [submitting, setSubmitting] = useState(false);
 
   const [form, setForm] = useState({
-    fullName: user?.address?.fullName || user?.name || '',
-    phone: user?.address?.phone || '',
-    street: user?.address?.street || '',
-    city: user?.address?.city || '',
-    state: user?.address?.state || '',
-    pincode: user?.address?.pincode || '',
-    country: user?.address?.country || 'India',
-    paymentMethod: 'COD',
+    fullName: user?.address?.fullName || user?.name || "",
+    phone: user?.address?.phone || "",
+    street: user?.address?.street || "",
+    city: user?.address?.city || "",
+    state: user?.address?.state || "",
+    pincode: user?.address?.pincode || "",
+    country: user?.address?.country || "India",
+    paymentMethod: "COD",
   });
 
   if (cart.items.length === 0) {
@@ -41,7 +45,14 @@ const Checkout = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const requiredFields = ['fullName', 'phone', 'street', 'city', 'state', 'pincode'];
+    const requiredFields = [
+      "fullName",
+      "phone",
+      "street",
+      "city",
+      "state",
+      "pincode",
+    ];
     for (const field of requiredFields) {
       if (!form[field].trim()) {
         toast.error(`Please enter ${field}`);
@@ -49,11 +60,11 @@ const Checkout = () => {
       }
     }
     if (!/^\d{10}$/.test(form.phone)) {
-      toast.error('Please enter a valid 10-digit phone');
+      toast.error("Please enter a valid 10-digit phone");
       return;
     }
     if (!/^\d{6}$/.test(form.pincode)) {
-      toast.error('Please enter a valid 6-digit pincode');
+      toast.error("Please enter a valid 6-digit pincode");
       return;
     }
 
@@ -65,7 +76,8 @@ const Checkout = () => {
         size: i.size,
         color: i.color,
       }));
-      const { data } = await api.post('/orders', {
+
+      const { data } = await api.post("/orders", {
         items,
         shippingAddress: { ...form },
         paymentMethod: form.paymentMethod,
@@ -73,16 +85,19 @@ const Checkout = () => {
         taxPrice: totals.tax,
       });
 
-      // COD: place order and finish
-      if (form.paymentMethod === 'COD') {
-        toast.success('Order placed successfully!');
+      // ── COD: go to /payment-successful page directly ──
+      if (form.paymentMethod === "COD") {
         await refresh();
-        navigate('/orders');
+        navigate("/payment-successful", { state: { order: data.order } });
         return;
       }
 
+      // Card / UPI: redirect to Stripe ──
+      // Stripe will redirect back to /payment-successful?session_id=xxx
+      // Make sure your Stripe session success_url is set to:
+      // `${window.location.origin}/payment-successful?session_id={CHECKOUT_SESSION_ID}`
       const orderId = data.order._id;
-      const session = await api.post('/payments/stripe/session', { orderId });
+      const session = await api.post("/payments/stripe/session", { orderId });
       window.location.href = session.data.url;
     } catch (err) {
       toast.error(err.message);
@@ -181,13 +196,13 @@ const Checkout = () => {
           <div className="card-glass p-6">
             <h3 className="text-lg font-semibold">Payment Method</h3>
             <div className="mt-4 space-y-2">
-              {['COD', 'Card', 'UPI'].map((p) => (
+              {["COD", "Card", "UPI"].map((p) => (
                 <label
                   key={p}
                   className={`flex cursor-pointer items-center gap-3 rounded-xl border-2 p-4 transition ${
                     form.paymentMethod === p
-                      ? 'border-brand-pink bg-brand-pink-soft/40 dark:bg-brand-pink/10'
-                      : 'border-gray-200 dark:border-gray-700'
+                      ? "border-brand-green bg-brand-green-soft/40 dark:bg-brand-green/10"
+                      : "border-gray-200 dark:border-gray-700"
                   }`}
                 >
                   <input
@@ -196,10 +211,14 @@ const Checkout = () => {
                     value={p}
                     checked={form.paymentMethod === p}
                     onChange={handleChange}
-                    className="accent-brand-pink"
+                    className="accent-brand-green"
                   />
                   <span className="font-medium">
-                    {p === 'COD' ? 'Cash on Delivery' : p === 'Card' ? 'Credit/Debit Card' : 'UPI'}
+                    {p === "COD"
+                      ? "Cash on Delivery"
+                      : p === "Card"
+                        ? "Credit/Debit Card"
+                        : "UPI"}
                   </span>
                 </label>
               ))}
@@ -233,7 +252,9 @@ const Checkout = () => {
                     </p>
                   </div>
                   <p className="text-sm font-semibold">
-                    {formatPrice(getEffectivePrice(item.product) * item.quantity)}
+                    {formatPrice(
+                      getEffectivePrice(item.product) * item.quantity,
+                    )}
                   </p>
                 </div>
               ))}
@@ -249,7 +270,9 @@ const Checkout = () => {
               <div className="flex justify-between">
                 <span>Shipping</span>
                 <span className="font-semibold">
-                  {totals.shipping === 0 ? 'FREE' : formatPrice(totals.shipping)}
+                  {totals.shipping === 0
+                    ? "FREE"
+                    : formatPrice(totals.shipping)}
                 </span>
               </div>
               <div className="flex justify-between">
@@ -259,7 +282,7 @@ const Checkout = () => {
               <div className="my-2 border-t border-dashed border-gray-300 dark:border-gray-600" />
               <div className="flex justify-between text-base">
                 <span className="font-semibold">Total</span>
-                <span className="font-bold text-brand-pink">
+                <span className="font-bold text-brand-green">
                   {formatPrice(totals.total)}
                 </span>
               </div>
@@ -270,7 +293,7 @@ const Checkout = () => {
               disabled={submitting}
               className="btn-primary mt-5 w-full"
             >
-              {submitting ? 'Placing order…' : 'Place Order'}{' '}
+              {submitting ? "Placing order…" : "Place Order"}{" "}
               {!submitting && <FiArrowRight />}
             </button>
           </div>

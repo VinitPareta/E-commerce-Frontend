@@ -11,12 +11,13 @@ import Cart from "./pages/Cart";
 import Wishlist from "./pages/Wishlist";
 import Checkout from "./pages/Checkout";
 import Login from "./pages/Login";
-import AdminLogin from "./pages/AdminLogin"; // Admin login page
+import AdminLogin from "./pages/AdminLogin";
 import Register from "./pages/Register";
 import Profile from "./pages/Profile";
 import MyOrders from "./pages/MyOrders";
 import OrderDetails from "./pages/OrderDetails";
 import NotFound from "./pages/NotFound";
+import PaymentSuccess from "./pages/PaymentSuccess";
 
 import AdminLayout from "./admin/AdminLayout";
 import Dashboard from "./admin/Dashboard";
@@ -24,6 +25,8 @@ import AdminProducts from "./admin/AdminProducts";
 import AdminProductForm from "./admin/AdminProductForm";
 import AdminOrders from "./admin/AdminOrders";
 import AdminUsers from "./admin/AdminUsers";
+import AdminPayments from "./admin/AdminPayments";
+import AdminPaymentDetail from "./admin/AdminPaymentDetail"; // add this import at top
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -41,7 +44,13 @@ const App = () => {
     <div className="flex min-h-screen flex-col">
       <ScrollToTop />
       {!isAdminRoute && <Navbar />}
-      <main className="flex-1">
+
+      {/* pt-28 only for non-admin, non-home user pages */}
+      <main
+        className={`flex-1 ${
+          !isAdminRoute && location.pathname !== "/" ? "pt-28" : ""
+        }`}
+      >
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/shop" element={<Shop />} />
@@ -50,8 +59,8 @@ const App = () => {
           <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/admin/login" element={<AdminLogin />} /> // Admin login
-          route
+          <Route path="/admin/login" element={<AdminLogin />} />
+
           <Route
             path="/checkout"
             element={
@@ -60,6 +69,16 @@ const App = () => {
               </ProtectedRoute>
             }
           />
+
+          <Route
+            path="/payment-successful"
+            element={
+              <ProtectedRoute>
+                <PaymentSuccess />
+              </ProtectedRoute>
+            }
+          />
+
           <Route
             path="/profile"
             element={
@@ -84,6 +103,7 @@ const App = () => {
               </ProtectedRoute>
             }
           />
+
           <Route
             path="/admin"
             element={
@@ -92,16 +112,22 @@ const App = () => {
               </ProtectedRoute>
             }
           >
+            <Route path="/admin/payments" element={<AdminPayments />} />
             <Route index element={<Dashboard />} />
             <Route path="products" element={<AdminProducts />} />
             <Route path="products/new" element={<AdminProductForm />} />
             <Route path="products/:id/edit" element={<AdminProductForm />} />
             <Route path="orders" element={<AdminOrders />} />
             <Route path="users" element={<AdminUsers />} />
+            <Route path="payments" element={<AdminPayments />} />
+            <Route path="payments/:id" element={<AdminPaymentDetail />} />{" "}
+            {/* ADD THIS */}
           </Route>
+
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
+
       {!isAdminRoute && <Footer />}
     </div>
   );

@@ -85,7 +85,7 @@ const AdminProducts = () => {
           className="overflow-x-auto rounded-2xl bg-white shadow-card dark:bg-brand-black-soft"
         >
           <table className="w-full text-sm">
-            <thead className="bg-brand-pink-soft text-left text-xs uppercase text-brand-pink-dark dark:bg-brand-black">
+            <thead className="bg-brand-green-soft text-left text-xs uppercase text-brand-green-dark dark:bg-brand-black">
               <tr>
                 <th className="px-4 py-3">Product</th>
                 <th className="px-4 py-3">Category</th>
@@ -99,7 +99,7 @@ const AdminProducts = () => {
               {products.map((p) => (
                 <tr
                   key={p._id}
-                  className="border-t border-gray-100 hover:bg-brand-pink-soft/20 dark:border-white/10 dark:hover:bg-brand-black"
+                  className="border-t border-gray-100 hover:bg-brand-green-soft/20 dark:border-white/10 dark:hover:bg-brand-black"
                 >
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-3">
@@ -170,8 +170,8 @@ const AdminProducts = () => {
               onClick={() => setPage(i + 1)}
               className={`h-9 w-9 rounded-full text-sm font-medium ${
                 page === i + 1
-                  ? 'bg-brand-pink text-white'
-                  : 'hover:bg-brand-pink-soft dark:hover:bg-brand-black-soft'
+                  ? 'bg-brand-green text-white'
+                  : 'hover:bg-brand-green-soft dark:hover:bg-brand-black-soft'
               }`}
             >
               {i + 1}

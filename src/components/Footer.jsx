@@ -2,12 +2,12 @@ import { Link } from 'react-router-dom';
 import { FiInstagram, FiFacebook, FiTwitter, FiYoutube } from 'react-icons/fi';
 
 const Footer = () => (
-  <footer className="mt-20 border-t border-gray-200/60 bg-brand-pink-soft/40 dark:bg-brand-black-soft dark:border-white/10">
+  <footer className="mt-20 border-t border-gray-200/60 bg-brand-green-soft/40 dark:bg-brand-black-soft dark:border-white/10">
     <div className="container-app py-12">
       <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
         <div>
           <Link to="/" className="flex items-center gap-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-brand-pink to-brand-pink-dark text-sm font-extrabold text-white shadow-soft">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-brand-green to-brand-green-dark text-sm font-extrabold text-white shadow-soft">
               DS
             </div>
             <span className="font-display text-2xl font-bold">DS Store</span>
@@ -21,7 +21,7 @@ const Footer = () => (
               <a
                 key={i}
                 href="#"
-                className="flex h-9 w-9 items-center justify-center rounded-full bg-white shadow-card transition hover:bg-brand-pink hover:text-white dark:bg-brand-black"
+                className="flex h-9 w-9 items-center justify-center rounded-full bg-white shadow-card transition hover:bg-brand-green hover:text-white dark:bg-brand-black"
                 aria-label="social"
               >
                 <Icon />
@@ -34,25 +34,25 @@ const Footer = () => (
           <h4 className="mb-3 font-semibold">Shop</h4>
           <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
             <li>
-              <Link to="/shop?category=Men" className="hover:text-brand-pink">
+              <Link to="/shop?category=Men" className="hover:text-brand-green">
                 Men
               </Link>
             </li>
             <li>
-              <Link to="/shop?category=Women" className="hover:text-brand-pink">
+              <Link to="/shop?category=Women" className="hover:text-brand-green">
                 Women
               </Link>
             </li>
             <li>
               <Link
                 to="/shop?category=Accessories"
-                className="hover:text-brand-pink"
+                className="hover:text-brand-green"
               >
                 Accessories
               </Link>
             </li>
             <li>
-              <Link to="/shop?trending=true" className="hover:text-brand-pink">
+              <Link to="/shop?trending=true" className="hover:text-brand-green">
                 Trending
               </Link>
             </li>
@@ -62,10 +62,10 @@ const Footer = () => (
         <div>
           <h4 className="mb-3 font-semibold">Help</h4>
           <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-            <li><a href="#" className="hover:text-brand-pink">Shipping</a></li>
-            <li><a href="#" className="hover:text-brand-pink">Returns</a></li>
-            <li><a href="#" className="hover:text-brand-pink">FAQ</a></li>
-            <li><a href="#" className="hover:text-brand-pink">Contact</a></li>
+            <li><a href="#" className="hover:text-brand-green">Shipping</a></li>
+            <li><a href="#" className="hover:text-brand-green">Returns</a></li>
+            <li><a href="#" className="hover:text-brand-green">FAQ</a></li>
+            <li><a href="#" className="hover:text-brand-green">Contact</a></li>
           </ul>
         </div>
 

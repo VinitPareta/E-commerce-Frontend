@@ -27,7 +27,7 @@ const ProductCard = ({ product, index = 0 }) => {
       className="group relative overflow-hidden rounded-2xl bg-white shadow-card dark:bg-brand-black-soft"
     >
       <Link to={`/product/${product._id}`} className="block">
-        <div className="relative aspect-square overflow-hidden bg-brand-pink-soft dark:bg-brand-black">
+        <div className="relative aspect-square overflow-hidden bg-brand-green-soft dark:bg-brand-black">
           <img
             src={buildImageUrl(product.images?.[0])}
             alt={product.name}
@@ -40,7 +40,7 @@ const ProductCard = ({ product, index = 0 }) => {
           />
 
           {discount > 0 && (
-            <span className="badge absolute left-3 top-3 bg-brand-pink text-white shadow-lg">
+            <span className="badge absolute left-3 top-3 bg-brand-green text-white shadow-lg">
               -{discount}%
             </span>
           )}
@@ -50,7 +50,7 @@ const ProductCard = ({ product, index = 0 }) => {
             </span>
           )}
           {product.isFeatured && product.inStock && (
-            <span className="badge absolute right-3 top-3 bg-white text-brand-pink shadow">
+            <span className="badge absolute right-3 top-3 bg-white text-brand-green shadow">
               Featured
             </span>
           )}
@@ -64,19 +64,19 @@ const ProductCard = ({ product, index = 0 }) => {
           toggle(product._id);
         }}
         aria-label="Toggle wishlist"
-        className={`absolute right-3 top-1/2 -translate-y-12 rounded-full bg-white/90 p-2.5 opacity-0 shadow-lg backdrop-blur transition-all duration-300 hover:bg-brand-pink hover:text-white group-hover:translate-y-0 group-hover:opacity-100 dark:bg-brand-black/80 ${
-          inWishlist ? '!opacity-100 !translate-y-0 text-brand-pink' : ''
+        className={`absolute right-3 top-1/2 -translate-y-12 rounded-full bg-white/90 p-2.5 opacity-0 shadow-lg backdrop-blur transition-all duration-300 hover:bg-brand-green hover:text-white group-hover:translate-y-0 group-hover:opacity-100 dark:bg-brand-black/80 ${
+          inWishlist ? '!opacity-100 !translate-y-0 text-brand-green' : ''
         }`}
       >
-        <FiHeart className={inWishlist ? 'fill-brand-pink' : ''} />
+        <FiHeart className={inWishlist ? 'fill-brand-green' : ''} />
       </button>
 
       <div className="space-y-2 p-4">
-        <p className="text-xs uppercase tracking-wide text-brand-pink">
+        <p className="text-xs uppercase tracking-wide text-brand-green">
           {product.category}
         </p>
         <Link to={`/product/${product._id}`}>
-          <h3 className="line-clamp-1 font-semibold transition group-hover:text-brand-pink">
+          <h3 className="line-clamp-1 font-semibold transition group-hover:text-brand-green">
             {product.name}
           </h3>
         </Link>
@@ -91,7 +91,7 @@ const ProductCard = ({ product, index = 0 }) => {
 
         <div className="flex items-end justify-between pt-1">
           <div>
-            <p className="text-lg font-bold text-brand-pink">
+            <p className="text-lg font-bold text-brand-green">
               {formatPrice(getEffectivePrice(product))}
             </p>
             {discount > 0 && (
@@ -105,7 +105,7 @@ const ProductCard = ({ product, index = 0 }) => {
             onClick={() => addToCart(product._id, 1)}
             disabled={!product.inStock}
             aria-label="Add to cart"
-            className="rounded-full bg-brand-pink p-2.5 text-white shadow-soft transition hover:bg-brand-pink-dark disabled:opacity-40"
+            className="rounded-full bg-brand-green p-2.5 text-white shadow-soft transition hover:bg-brand-green-dark disabled:opacity-40"
           >
             <FiShoppingBag />
           </button>

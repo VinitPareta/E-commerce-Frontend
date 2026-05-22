@@ -11,7 +11,7 @@ const Wishlist = () => {
   if (!isAuthenticated) {
     return (
       <div className="container-app py-20 text-center">
-        <FiHeart className="mx-auto text-6xl text-brand-pink" />
+        <FiHeart className="mx-auto text-6xl text-brand-green" />
         <h2 className="mt-4 heading text-2xl">Login to view your wishlist</h2>
         <Link to="/login" className="btn-primary mt-5 inline-flex">
           Login
@@ -32,7 +32,7 @@ const Wishlist = () => {
         <p className="mt-8 text-center text-gray-500">Loading…</p>
       ) : wishlist?.products?.length === 0 ? (
         <div className="mt-12 text-center">
-          <FiHeart className="mx-auto text-6xl text-brand-pink" />
+          <FiHeart className="mx-auto text-6xl text-brand-green" />
           <p className="mt-4 text-lg font-semibold">Your wishlist is empty</p>
           <p className="mt-1 text-sm text-gray-500">
             Save products you love for later

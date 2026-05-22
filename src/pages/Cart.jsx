@@ -13,7 +13,7 @@ const Cart = () => {
   if (!isAuthenticated) {
     return (
       <div className="container-app py-20 text-center">
-        <FiShoppingBag className="mx-auto text-6xl text-brand-pink" />
+        <FiShoppingBag className="mx-auto text-6xl text-brand-green" />
         <h2 className="mt-4 heading text-2xl">Login to view your cart</h2>
         <Link to="/login" className="btn-primary mt-5 inline-flex">
           Login
@@ -25,7 +25,7 @@ const Cart = () => {
   if (cart.items.length === 0 && !loading) {
     return (
       <div className="container-app py-20 text-center">
-        <FiShoppingBag className="mx-auto text-6xl text-brand-pink" />
+        <FiShoppingBag className="mx-auto text-6xl text-brand-green" />
         <h2 className="mt-4 heading text-2xl">Your cart is empty</h2>
         <p className="mt-2 text-gray-500">
           Looks like you haven't added anything yet
@@ -61,7 +61,7 @@ const Cart = () => {
                 >
                   <Link
                     to={`/product/${item.product._id}`}
-                    className="block h-28 w-28 flex-shrink-0 overflow-hidden rounded-xl bg-brand-pink-soft dark:bg-brand-black"
+                    className="block h-28 w-28 flex-shrink-0 overflow-hidden rounded-xl bg-brand-green-soft dark:bg-brand-black"
                   >
                     <img
                       src={buildImageUrl(item.product.images?.[0])}
@@ -75,7 +75,7 @@ const Cart = () => {
                       <div>
                         <Link
                           to={`/product/${item.product._id}`}
-                          className="font-semibold hover:text-brand-pink"
+                          className="font-semibold hover:text-brand-green"
                         >
                           {item.product.name}
                         </Link>
@@ -117,7 +117,7 @@ const Cart = () => {
                           <FiPlus />
                         </button>
                       </div>
-                      <p className="text-lg font-bold text-brand-pink">
+                      <p className="text-lg font-bold text-brand-green">
                         {formatPrice(price * item.quantity)}
                       </p>
                     </div>
@@ -151,7 +151,7 @@ const Cart = () => {
               <div className="my-3 border-t border-dashed border-gray-300 dark:border-gray-600" />
               <div className="flex justify-between text-base">
                 <span className="font-semibold">Total</span>
-                <span className="font-bold text-brand-pink">
+                <span className="font-bold text-brand-green">
                   {formatPrice(totals.total)}
                 </span>
               </div>
@@ -164,7 +164,7 @@ const Cart = () => {
             </button>
             <Link
               to="/shop"
-              className="mt-3 block text-center text-sm text-brand-pink hover:underline"
+              className="mt-3 block text-center text-sm text-brand-green hover:underline"
             >
               Continue Shopping
             </Link>

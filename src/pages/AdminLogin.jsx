@@ -102,7 +102,7 @@ const AdminLogin = () => {
             </Link>
             <Link
               to="/login"
-              className="font-semibold text-brand-pink hover:underline"
+              className="font-semibold text-brand-green hover:underline"
             >
               User login
             </Link>

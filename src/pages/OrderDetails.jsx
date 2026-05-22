@@ -48,7 +48,7 @@ const OrderDetails = () => {
     return (
       <div className="container-app py-20 text-center">
         Order not found.{' '}
-        <Link to="/orders" className="text-brand-pink underline">
+        <Link to="/orders" className="text-brand-green underline">
           Back
         </Link>
       </div>
@@ -90,7 +90,7 @@ const OrderDetails = () => {
             <div className="divide-y divide-gray-200/60 dark:divide-white/10">
               {order.items.map((it, n) => (
                 <div key={n} className="flex items-center gap-4 py-3">
-                  <div className="h-16 w-16 overflow-hidden rounded-xl bg-brand-pink-soft">
+                  <div className="h-16 w-16 overflow-hidden rounded-xl bg-brand-green-soft">
                     <img
                       src={buildImageUrl(it.image)}
                       alt={it.name}
@@ -154,7 +154,7 @@ const OrderDetails = () => {
               <div className="my-2 border-t border-dashed border-gray-300 dark:border-gray-600" />
               <div className="flex justify-between text-base">
                 <span className="font-semibold">Total</span>
-                <span className="font-bold text-brand-pink">
+                <span className="font-bold text-brand-green">
                   {formatPrice(order.totalPrice)}
                 </span>
               </div>

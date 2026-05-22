@@ -25,8 +25,8 @@ const Pagination = ({ page, pages, onPageChange }) => {
           onClick={() => onPageChange(n)}
           className={`h-9 w-9 rounded-full text-sm font-medium transition ${
             n === page
-              ? 'bg-brand-pink text-white shadow-soft'
-              : 'hover:bg-brand-pink-soft dark:hover:bg-brand-black-soft'
+              ? 'bg-brand-green text-white shadow-soft'
+              : 'hover:bg-brand-green-soft dark:hover:bg-brand-black-soft'
           }`}
         >
           {n}

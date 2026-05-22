@@ -266,7 +266,7 @@ const AdminProductForm = () => {
               {form.images.map((url, i) => (
                 <div
                   key={i}
-                  className="group relative aspect-square overflow-hidden rounded-xl bg-brand-pink-soft"
+                  className="group relative aspect-square overflow-hidden rounded-xl bg-brand-green-soft"
                 >
                   <img
                     src={buildImageUrl(url)}
@@ -283,7 +283,7 @@ const AdminProductForm = () => {
                 </div>
               ))}
               <label
-                className={`flex aspect-square cursor-pointer items-center justify-center rounded-xl border-2 border-dashed border-gray-300 text-gray-400 transition hover:border-brand-pink hover:text-brand-pink ${
+                className={`flex aspect-square cursor-pointer items-center justify-center rounded-xl border-2 border-dashed border-gray-300 text-gray-400 transition hover:border-brand-green hover:text-brand-green ${
                   uploading ? 'pointer-events-none opacity-50' : ''
                 }`}
               >
@@ -366,7 +366,7 @@ const AdminProductForm = () => {
                   name="isFeatured"
                   checked={form.isFeatured}
                   onChange={handleChange}
-                  className="accent-brand-pink"
+                  className="accent-brand-green"
                 />
                 <span className="text-sm">Featured Product</span>
               </label>
@@ -376,7 +376,7 @@ const AdminProductForm = () => {
                   name="isTrending"
                   checked={form.isTrending}
                   onChange={handleChange}
-                  className="accent-brand-pink"
+                  className="accent-brand-green"
                 />
                 <span className="text-sm">Trending Now</span>
               </label>

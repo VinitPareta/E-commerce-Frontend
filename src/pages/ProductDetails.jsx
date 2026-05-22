@@ -66,13 +66,13 @@ const ProductDetails = () => {
   return (
     <div className="container-app py-8">
       <nav className="mb-6 text-sm text-gray-500">
-        <Link to="/" className="hover:text-brand-pink">Home</Link>
+        <Link to="/" className="hover:text-brand-green">Home</Link>
         <span className="mx-2">/</span>
-        <Link to="/shop" className="hover:text-brand-pink">Shop</Link>
+        <Link to="/shop" className="hover:text-brand-green">Shop</Link>
         <span className="mx-2">/</span>
         <Link
           to={`/shop?category=${product.category}`}
-          className="hover:text-brand-pink"
+          className="hover:text-brand-green"
         >
           {product.category}
         </Link>
@@ -85,7 +85,7 @@ const ProductDetails = () => {
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
         >
-          <div className="overflow-hidden rounded-3xl bg-brand-pink-soft dark:bg-brand-black-soft">
+          <div className="overflow-hidden rounded-3xl bg-brand-green-soft dark:bg-brand-black-soft">
             <img
               src={buildImageUrl(product.images?.[activeImg])}
               alt={product.name}
@@ -104,7 +104,7 @@ const ProductDetails = () => {
                   onClick={() => setActiveImg(i)}
                   className={`h-20 w-20 flex-shrink-0 overflow-hidden rounded-xl border-2 transition ${
                     i === activeImg
-                      ? 'border-brand-pink'
+                      ? 'border-brand-green'
                       : 'border-transparent opacity-70'
                   }`}
                 >
@@ -124,7 +124,7 @@ const ProductDetails = () => {
           animate={{ opacity: 1, x: 0 }}
           className="flex flex-col"
         >
-          <p className="text-sm uppercase tracking-wide text-brand-pink">
+          <p className="text-sm uppercase tracking-wide text-brand-green">
             {product.category} • {product.subCategory}
           </p>
           <h1 className="mt-2 font-display text-3xl font-bold md:text-4xl">
@@ -144,7 +144,7 @@ const ProductDetails = () => {
           )}
 
           <div className="mt-5 flex items-end gap-3">
-            <p className="text-3xl font-bold text-brand-pink md:text-4xl">
+            <p className="text-3xl font-bold text-brand-green md:text-4xl">
               {formatPrice(getEffectivePrice(product))}
             </p>
             {discount > 0 && (
@@ -152,7 +152,7 @@ const ProductDetails = () => {
                 <p className="text-lg text-gray-400 line-through">
                   {formatPrice(product.price)}
                 </p>
-                <span className="badge bg-brand-pink/10 text-brand-pink">
+                <span className="badge bg-brand-green/10 text-brand-green">
                   {discount}% OFF
                 </span>
               </>
@@ -173,8 +173,8 @@ const ProductDetails = () => {
                     onClick={() => setSize(s)}
                     className={`min-w-[3rem] rounded-xl border-2 px-4 py-2 text-sm font-medium transition ${
                       s === size
-                        ? 'border-brand-pink bg-brand-pink text-white'
-                        : 'border-gray-200 hover:border-brand-pink dark:border-gray-700'
+                        ? 'border-brand-green bg-brand-green text-white'
+                        : 'border-gray-200 hover:border-brand-green dark:border-gray-700'
                     }`}
                   >
                     {s}
@@ -194,8 +194,8 @@ const ProductDetails = () => {
                     onClick={() => setColor(c)}
                     className={`rounded-xl border-2 px-4 py-2 text-sm font-medium transition ${
                       c === color
-                        ? 'border-brand-pink bg-brand-pink text-white'
-                        : 'border-gray-200 hover:border-brand-pink dark:border-gray-700'
+                        ? 'border-brand-green bg-brand-green text-white'
+                        : 'border-gray-200 hover:border-brand-green dark:border-gray-700'
                     }`}
                   >
                     {c}
@@ -247,7 +247,7 @@ const ProductDetails = () => {
               onClick={() => toggle(product._id)}
               className={`btn ${
                 inWishlist
-                  ? 'bg-brand-pink text-white'
+                  ? 'bg-brand-green text-white'
                   : 'btn-outline'
               }`}
               aria-label="Toggle wishlist"
@@ -258,14 +258,14 @@ const ProductDetails = () => {
 
           <div className="mt-8 grid gap-3 sm:grid-cols-2">
             <div className="flex items-center gap-3 rounded-2xl border border-gray-100 p-3 dark:border-white/10">
-              <FiTruck className="text-xl text-brand-pink" />
+              <FiTruck className="text-xl text-brand-green" />
               <div>
                 <p className="text-sm font-semibold">Free Shipping</p>
                 <p className="text-xs text-gray-500">Above ₹1000</p>
               </div>
             </div>
             <div className="flex items-center gap-3 rounded-2xl border border-gray-100 p-3 dark:border-white/10">
-              <FiShield className="text-xl text-brand-pink" />
+              <FiShield className="text-xl text-brand-green" />
               <div>
                 <p className="text-sm font-semibold">Secure Payment</p>
                 <p className="text-xs text-gray-500">100% safe</p>
@@ -282,7 +282,7 @@ const ProductDetails = () => {
             {product.reviews.map((r, i) => (
               <div key={i} className="card-glass p-5">
                 <div className="flex items-start gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-pink text-white">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-green text-white">
                     {r.name?.charAt(0).toUpperCase()}
                   </div>
                   <div>
