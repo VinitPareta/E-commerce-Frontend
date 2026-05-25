@@ -26,7 +26,8 @@ import AdminProductForm from "./admin/AdminProductForm";
 import AdminOrders from "./admin/AdminOrders";
 import AdminUsers from "./admin/AdminUsers";
 import AdminPayments from "./admin/AdminPayments";
-import AdminPaymentDetail from "./admin/AdminPaymentDetail"; // add this import at top
+import AdminPaymentDetail from "./admin/AdminPaymentDetail";
+import AdminWebhook from "./admin/AdminWebhook";
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -122,6 +123,7 @@ const App = () => {
             <Route path="payments" element={<AdminPayments />} />
             <Route path="payments/:id" element={<AdminPaymentDetail />} />{" "}
             {/* ADD THIS */}
+            <Route path="webhook" element={<AdminWebhook />} />
           </Route>
 
           <Route path="*" element={<NotFound />} />

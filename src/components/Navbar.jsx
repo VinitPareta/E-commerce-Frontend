@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   FiSearch,
@@ -20,6 +20,7 @@ import { useTheme } from "../context/ThemeContext";
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { user, isAuthenticated, isAdmin, logout } = useAuth();
   const { totals } = useCart();
   const { wishlist } = useWishlist();
@@ -45,7 +46,9 @@ const Navbar = () => {
   ];
   const [announcementIndex, setAnnouncementIndex] = useState(0);
 
-  // Auto-rotate every 3 seconds
+  // Only show transparent/hero navbar on the home page
+  const isHomePage = location.pathname === "/";
+
   useEffect(() => {
     const timer = setInterval(() => {
       setAnnouncementIndex((i) => (i + 1) % announcements.length);
@@ -53,7 +56,6 @@ const Navbar = () => {
     return () => clearInterval(timer);
   }, []);
 
-  // TYPING PLACEHOLDER EFFECT
   useEffect(() => {
     const texts = [
       "Search Sneakers...",
@@ -62,13 +64,13 @@ const Navbar = () => {
       "Search Trending Fashion...",
       "Search Premium Products...",
     ];
-    let currentTextIndex = 0;
-    let currentCharIndex = 0;
-    let isDeleting = false;
-    let timer;
-    const typingSpeed = 90;
-    const deletingSpeed = 45;
-    const pauseTime = 1800;
+    let currentTextIndex = 0,
+      currentCharIndex = 0,
+      isDeleting = false,
+      timer;
+    const typingSpeed = 90,
+      deletingSpeed = 45,
+      pauseTime = 1800;
     const typeEffect = () => {
       const currentText = texts[currentTextIndex];
       if (!isDeleting) {
@@ -150,7 +152,11 @@ const Navbar = () => {
     { name: "Accessories", to: "/shop?category=Accessories" },
   ];
 
-  const isOverHero = !scrolled && !hovered;
+  // Transparent hero mode ONLY on home page when not scrolled and not hovered
+  const isOverHero = isHomePage && !scrolled && !hovered;
+
+  // Solid background: always on non-home pages, or when scrolled/hovered on home
+  const isSolid = !isOverHero;
 
   return (
     <>
@@ -195,15 +201,15 @@ const Navbar = () => {
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
         className={`fixed top-8 left-0 right-0 z-40 w-full transition-all duration-500 ${
-          scrolled || hovered
+          isSolid
             ? "bg-white/95 backdrop-blur-lg shadow-[0_2px_20px_rgba(16,185,129,0.10)] border-b border-brand-green/15 dark:bg-brand-black/95"
             : "bg-transparent"
         }`}
       >
-        {/* Top green accent line — appears on scroll */}
+        {/* Top green accent line */}
         <div
           className={`absolute top-0 left-0 h-[2px] bg-gradient-to-r from-transparent via-brand-green to-transparent transition-all duration-700 ${
-            scrolled || hovered ? "w-full opacity-70" : "w-0 opacity-0"
+            isSolid ? "w-full opacity-70" : "w-0 opacity-0"
           }`}
         />
 
@@ -255,7 +261,7 @@ const Navbar = () => {
               </motion.div>
               <span
                 className={`font-display text-xl font-bold tracking-tight transition-colors duration-300 md:text-2xl ${
-                  isOverHero ? "text-white" : scrolled ? "text-brand-green" : ""
+                  isOverHero ? "text-white" : "text-brand-green dark:text-white"
                 }`}
               >
                 DS Store
@@ -265,7 +271,7 @@ const Navbar = () => {
 
           {/* RIGHT — Actions */}
           <div className="flex flex-1 items-center justify-end gap-1">
-            {/* Search icon → expands on click */}
+            {/* Search */}
             <div className="relative hidden md:block" ref={searchRef}>
               <AnimatePresence mode="wait">
                 {searchOpen ? (
