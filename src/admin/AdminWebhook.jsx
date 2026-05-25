@@ -6,7 +6,6 @@ import {
   FiSearch,
   FiChevronLeft,
   FiChevronRight,
-  FiRefreshCw,
   FiCheckCircle,
   FiXCircle,
   FiClock,
@@ -201,7 +200,6 @@ const AdminWebhook = () => {
   const [methodFilter, setMethodFilter] = useState("All");
   const [page, setPage] = useState(1);
   const [selectedEvent, setSelectedEvent] = useState(null);
-  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     const load = async () => {
@@ -220,19 +218,6 @@ const AdminWebhook = () => {
   useEffect(() => {
     setPage(1);
   }, [search, statusFilter, methodFilter]);
-
-  const handleRefresh = async () => {
-    try {
-      setRefreshing(true);
-      await api.post("/admin/webhook-events/refresh");
-      const { data } = await api.get("/admin/webhook-events");
-      setEvents(data.events || []);
-    } catch (err) {
-      console.error("Refresh failed:", err);
-    } finally {
-      setRefreshing(false);
-    }
-  };
 
   const filtered = events.filter((e) => {
     const q = search.toLowerCase();
@@ -296,14 +281,6 @@ const AdminWebhook = () => {
             All payment events — successful, failed &amp; cancelled
           </p>
         </div>
-        <button
-          onClick={handleRefresh}
-          disabled={refreshing}
-          className="flex items-center gap-2 rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-brand-black-soft px-4 py-2 text-sm font-medium hover:border-brand-green hover:text-brand-green transition disabled:opacity-50"
-        >
-          <FiRefreshCw size={14} className={refreshing ? "animate-spin" : ""} />
-          {refreshing ? "Refreshing..." : "Refresh Data"}
-        </button>
       </div>
 
       {/* Stats */}

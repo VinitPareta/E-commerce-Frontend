@@ -1,14 +1,14 @@
-import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { FiHeart, FiShoppingBag, FiStar } from 'react-icons/fi';
+import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import { FiHeart, FiShoppingBag, FiStar } from "react-icons/fi";
 import {
   formatPrice,
   getEffectivePrice,
   calcDiscountPercent,
   buildImageUrl,
-} from '../utils/helpers';
-import { useCart } from '../context/CartContext';
-import { useWishlist } from '../context/WishlistContext';
+} from "../utils/helpers";
+import { useCart } from "../context/CartContext";
+import { useWishlist } from "../context/WishlistContext";
 
 const ProductCard = ({ product, index = 0 }) => {
   const { addToCart } = useCart();
@@ -23,7 +23,6 @@ const ProductCard = ({ product, index = 0 }) => {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.4, delay: index * 0.05 }}
-      whileHover={{ y: -6 }}
       className="group relative overflow-hidden rounded-2xl bg-white shadow-card dark:bg-brand-black-soft"
     >
       <Link to={`/product/${product._id}`} className="block">
@@ -35,7 +34,7 @@ const ProductCard = ({ product, index = 0 }) => {
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
             onError={(e) => {
               e.target.src =
-                'https://placehold.co/600x600/FFE0EC/D63A75?text=DS+Store';
+                "https://placehold.co/600x600/FFE0EC/D63A75?text=DS+Store";
             }}
           />
 
@@ -65,10 +64,10 @@ const ProductCard = ({ product, index = 0 }) => {
         }}
         aria-label="Toggle wishlist"
         className={`absolute right-3 top-1/2 -translate-y-12 rounded-full bg-white/90 p-2.5 opacity-0 shadow-lg backdrop-blur transition-all duration-300 hover:bg-brand-green hover:text-white group-hover:translate-y-0 group-hover:opacity-100 dark:bg-brand-black/80 ${
-          inWishlist ? '!opacity-100 !translate-y-0 text-brand-green' : ''
+          inWishlist ? "!opacity-100 !translate-y-0 text-brand-green" : ""
         }`}
       >
-        <FiHeart className={inWishlist ? 'fill-brand-green' : ''} />
+        <FiHeart className={inWishlist ? "fill-brand-green" : ""} />
       </button>
 
       <div className="space-y-2 p-4">
