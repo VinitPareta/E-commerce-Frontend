@@ -295,10 +295,8 @@ const Home = () => {
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.07 }}
                   whileHover={{ y: -10, transition: { duration: 0.25 } }}
-                  className="group relative overflow-hidden rounded-2xl bg-white shadow-[0_8px_30px_rgba(0,0,0,0.3)] transition-shadow duration-300 hover:shadow-[0_24px_60px_rgba(16,185,129,0.4)]"
+                  className="relative rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.3)] transition-shadow duration-300 hover:shadow-[0_24px_60px_rgba(16,185,129,0.4)] ring-0 hover:ring-2 ring-brand-green/50"
                 >
-                  {/* Green ring on hover */}
-                  <div className="pointer-events-none absolute inset-0 z-10 rounded-2xl ring-0 ring-brand-green/50 transition-all duration-300 group-hover:ring-2" />
                   <ProductCard product={p} index={i} />
                 </motion.div>
               ))}

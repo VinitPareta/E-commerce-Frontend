@@ -16,6 +16,11 @@ const ProductCard = ({ product, index = 0 }) => {
 
   const discount = calcDiscountPercent(product);
   const inWishlist = isInWishlist(product._id);
+  const outOfStock = !product.inStock || product.stock <= 0;
+
+  // ✅ Fix: use numReviews (from API) not reviews.length
+  const reviewCount = product.numReviews ?? product.reviews?.length ?? 0;
+  const rating = product.rating ?? 0;
 
   return (
     <motion.div
@@ -38,17 +43,15 @@ const ProductCard = ({ product, index = 0 }) => {
             }}
           />
 
+          {/* Discount Badge */}
           {discount > 0 && (
             <span className="badge absolute left-3 top-3 bg-brand-green text-white shadow-lg">
               -{discount}%
             </span>
           )}
-          {!product.inStock && (
-            <span className="badge absolute right-3 top-3 bg-brand-black text-white">
-              Out of Stock
-            </span>
-          )}
-          {product.isFeatured && product.inStock && (
+
+          {/* Featured Badge */}
+          {product.isFeatured && !outOfStock && (
             <span className="badge absolute right-3 top-3 bg-white text-brand-green shadow">
               Featured
             </span>
@@ -56,6 +59,7 @@ const ProductCard = ({ product, index = 0 }) => {
         </div>
       </Link>
 
+      {/* Wishlist Button */}
       <button
         type="button"
         onClick={(e) => {
@@ -74,21 +78,21 @@ const ProductCard = ({ product, index = 0 }) => {
         <p className="text-xs uppercase tracking-wide text-brand-green">
           {product.category}
         </p>
+
         <Link to={`/product/${product._id}`}>
-          <h3 className="line-clamp-1 font-semibold transition group-hover:text-brand-green">
+          <h3 className="line-clamp-1 font-semibold text-gray-900 dark:text-white transition group-hover:text-brand-green">
             {product.name}
           </h3>
         </Link>
 
-        {product.rating > 0 && (
-          <div className="flex items-center gap-1 text-xs text-gray-500">
-            <FiStar className="fill-yellow-400 text-yellow-400" />
-            <span>{product.rating.toFixed(1)}</span>
-            <span>({product.numReviews})</span>
-          </div>
-        )}
+        {/* ✅ Fix: always show rating row, use numReviews */}
+        <div className="flex items-center gap-1 text-xs text-gray-500">
+          <FiStar className="fill-yellow-400 text-yellow-400" />
+          <span>{rating.toFixed(1)}</span>
+          {reviewCount > 0 && <span>({reviewCount})</span>}
+        </div>
 
-        <div className="flex items-end justify-between pt-1">
+        <div className="flex items-center justify-between pt-1">
           <div>
             <p className="text-lg font-bold text-brand-green">
               {formatPrice(getEffectivePrice(product))}
@@ -99,15 +103,22 @@ const ProductCard = ({ product, index = 0 }) => {
               </p>
             )}
           </div>
-          <button
-            type="button"
-            onClick={() => addToCart(product._id, 1)}
-            disabled={!product.inStock}
-            aria-label="Add to cart"
-            className="rounded-full bg-brand-green p-2.5 text-white shadow-soft transition hover:bg-brand-green-dark disabled:opacity-40"
-          >
-            <FiShoppingBag />
-          </button>
+
+          {/* ✅ Fix: icon only when in stock, small badge when out of stock */}
+          {outOfStock ? (
+            <span className="rounded-full bg-red-100 px-2.5 py-1 text-[10px] font-semibold text-red-600">
+              Sold Out
+            </span>
+          ) : (
+            <button
+              type="button"
+              onClick={() => addToCart(product._id, 1)}
+              aria-label="Add to cart"
+              className="rounded-full bg-brand-green p-2.5 text-white shadow-soft transition hover:bg-brand-green-dark"
+            >
+              <FiShoppingBag />
+            </button>
+          )}
         </div>
       </div>
     </motion.div>
