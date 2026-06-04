@@ -28,7 +28,9 @@ import AdminUsers from "./admin/AdminUsers";
 import AdminPayments from "./admin/AdminPayments";
 import AdminPaymentDetail from "./admin/AdminPaymentDetail";
 import AdminWebhook from "./admin/AdminWebhook";
-
+import AdminChats from "./admin/AdminChats";
+import DSChatbot from "./components/DSChatbot";
+import AdminAIAssistant from "./admin/AdminAIAssistant";
 const ScrollToTop = () => {
   const { pathname } = useLocation();
   useEffect(() => {
@@ -123,7 +125,9 @@ const App = () => {
             <Route path="payments" element={<AdminPayments />} />
             <Route path="payments/:id" element={<AdminPaymentDetail />} />{" "}
             {/* ADD THIS */}
+            <Route path="chats" element={<AdminChats />} />
             <Route path="webhook" element={<AdminWebhook />} />
+            <Route path="ai-assistant" element={<AdminAIAssistant />} />
           </Route>
 
           <Route path="*" element={<NotFound />} />
@@ -131,6 +135,7 @@ const App = () => {
       </main>
 
       {!isAdminRoute && <Footer />}
+      {!isAdminRoute && <DSChatbot />}
     </div>
   );
 };

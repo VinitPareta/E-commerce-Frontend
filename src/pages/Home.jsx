@@ -13,6 +13,7 @@ import {
   FiRefreshCw,
   FiHeart,
 } from "react-icons/fi";
+import OutfitCompleteAI from "../components/OutfitCompleteAI";
 const Home = () => {
   const [featured, setFeatured] = useState([]);
   const [trending, setTrending] = useState([]);
@@ -158,6 +159,8 @@ const Home = () => {
           ))}
         </div>
       </section>
+
+      <OutfitCompleteAI />
 
       {/* ── Shop by Category ── */}
       <section className="container-app section">
@@ -326,7 +329,7 @@ const Home = () => {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.5 }}
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            className="fixed bottom-8 right-6 z-50 flex h-12 w-12 items-center justify-center rounded-full bg-brand-green shadow-glow hover:scale-110 hover:bg-brand-green-dark transition-all duration-300"
+            className="fixed bottom-24 right-6 z-50 flex h-12 w-12 items-center justify-center rounded-full bg-brand-green shadow-glow hover:scale-110 hover:bg-brand-green-dark transition-all duration-300"
           >
             <FiArrowUp className="text-white text-lg" />
           </motion.button>

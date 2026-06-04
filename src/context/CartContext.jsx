@@ -1,8 +1,14 @@
-import { createContext, useContext, useEffect, useState, useCallback } from 'react';
-import api from '../utils/api';
-import toast from 'react-hot-toast';
-import { useAuth } from './AuthContext';
-import { getEffectivePrice } from '../utils/helpers';
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useCallback,
+} from "react";
+import api from "../utils/api";
+import toast from "react-hot-toast";
+import { useAuth } from "./AuthContext";
+import { getEffectivePrice } from "../utils/helpers";
 
 const CartContext = createContext();
 
@@ -18,7 +24,7 @@ export const CartProvider = ({ children }) => {
     }
     try {
       setLoading(true);
-      const { data } = await api.get('/cart');
+      const { data } = await api.get("/cart");
       setCart(data.cart);
     } catch (err) {
       // silent fail
@@ -31,15 +37,20 @@ export const CartProvider = ({ children }) => {
     refresh();
   }, [refresh]);
 
-  const addToCart = async (productId, quantity = 1, size = '', color = '') => {
+  const addToCart = async (productId, quantity = 1, size = "", color = "") => {
     if (!isAuthenticated) {
-      toast.error('Please login to add to cart');
+      toast.error("Please login to add to cart");
       return false;
     }
     try {
-      const { data } = await api.post('/cart', { productId, quantity, size, color });
+      const { data } = await api.post("/cart", {
+        productId,
+        quantity,
+        size,
+        color,
+      });
       setCart(data.cart);
-      toast.success('Added to cart');
+      toast.success("Added to cart");
       return true;
     } catch (err) {
       toast.error(err.message);
@@ -60,7 +71,7 @@ export const CartProvider = ({ children }) => {
     try {
       const { data } = await api.delete(`/cart/${itemId}`);
       setCart(data.cart);
-      toast.success('Item removed');
+      toast.success("Item removed");
     } catch (err) {
       toast.error(err.message);
     }
@@ -68,7 +79,7 @@ export const CartProvider = ({ children }) => {
 
   const clearCart = async () => {
     try {
-      const { data } = await api.delete('/cart');
+      const { data } = await api.delete("/cart");
       setCart(data.cart);
     } catch (err) {
       toast.error(err.message);
@@ -83,7 +94,7 @@ export const CartProvider = ({ children }) => {
       acc.count += item.quantity;
       return acc;
     },
-    { subtotal: 0, count: 0 }
+    { subtotal: 0, count: 0 },
   );
   const shipping = totals.subtotal > 1000 || totals.subtotal === 0 ? 0 : 99;
   const tax = Math.round(totals.subtotal * 0.05);

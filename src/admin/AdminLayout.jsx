@@ -17,6 +17,8 @@ import {
   FiChevronDown,
   FiCreditCard,
   FiZap,
+  FiMessageCircle,
+  FiCpu,
 } from "react-icons/fi";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
@@ -27,7 +29,9 @@ const links = [
   { to: "/admin/orders", label: "Orders", icon: FiShoppingBag },
   { to: "/admin/users", label: "Users", icon: FiUsers },
   { to: "/admin/payments", label: "Payments", icon: FiCreditCard },
+  { to: "/admin/chats", label: "Chat Conversations", icon: FiMessageCircle },
   { to: "/admin/webhook", label: "Webhook", icon: FiZap },
+  { to: "/admin/ai-assistant", label: "AI Assistant", icon: FiCpu },
 ];
 
 const AdminLayout = () => {
