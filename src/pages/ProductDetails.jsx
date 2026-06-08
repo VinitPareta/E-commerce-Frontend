@@ -1,30 +1,55 @@
-import { useEffect, useState } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { FiHeart, FiShoppingBag, FiMinus, FiPlus, FiStar, FiTruck, FiShield } from 'react-icons/fi';
-import api from '../utils/api';
-import Loader from '../components/Loader';
+import { useEffect, useState, useRef } from "react";
+import { useParams, Link, useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import {
+  FiHeart,
+  FiShoppingBag,
+  FiMinus,
+  FiPlus,
+  FiStar,
+  FiTruck,
+  FiShield,
+  FiArrowRight,
+  FiChevronLeft,
+  FiChevronRight,
+} from "react-icons/fi";
+import api from "../utils/api";
+import Loader from "../components/Loader";
 import {
   formatPrice,
   getEffectivePrice,
   calcDiscountPercent,
   buildImageUrl,
-} from '../utils/helpers';
-import { useCart } from '../context/CartContext';
-import { useWishlist } from '../context/WishlistContext';
+} from "../utils/helpers";
+import { useCart } from "../context/CartContext";
+import { useWishlist } from "../context/WishlistContext";
+import PriceComparison from "../components/PriceComparison";
+import ProductCard from "../components/ProductCard";
+
+const AUTO_SCROLL_STEP = 1;
+const AUTO_SCROLL_INTERVAL = 20;
 
 const ProductDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { addToCart } = useCart();
   const { toggle, isInWishlist } = useWishlist();
+  const carouselRef = useRef(null);
 
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activeImg, setActiveImg] = useState(0);
-  const [size, setSize] = useState('');
-  const [color, setColor] = useState('');
+  const [size, setSize] = useState("");
+  const [color, setColor] = useState("");
   const [qty, setQty] = useState(1);
+  const [related, setRelated] = useState([]);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
+
+  const autoScrollRef = useRef(null);
+  const isHoveringCarousel = useRef(false);
+  const isResettingRef = useRef(false);
+  const resumeTimerRef = useRef(null);
 
   useEffect(() => {
     const load = async () => {
@@ -32,8 +57,15 @@ const ProductDetails = () => {
         setLoading(true);
         const { data } = await api.get(`/products/${id}`);
         setProduct(data.product);
-        setSize(data.product.sizes?.[0] || '');
-        setColor(data.product.colors?.[0] || '');
+        setSize(data.product.sizes?.[0] || "");
+        setColor(data.product.colors?.[0] || "");
+        setActiveImg(0);
+
+        const rel = await api.get(
+          `/products?category=${data.product.category}&limit=50`,
+        );
+        const list = rel.data.products || rel.data || [];
+        setRelated(list.filter((p) => p._id !== data.product._id));
       } catch (err) {
         // silent
       } finally {
@@ -42,6 +74,79 @@ const ProductDetails = () => {
     };
     load();
   }, [id]);
+
+  // Auto-scroll logic
+  const stopAutoScroll = () => {
+    if (autoScrollRef.current) {
+      clearInterval(autoScrollRef.current);
+      autoScrollRef.current = null;
+    }
+  };
+
+  const startAutoScroll = () => {
+    if (autoScrollRef.current) return; // already running
+    autoScrollRef.current = setInterval(() => {
+      const el = carouselRef.current;
+      if (!el || isHoveringCarousel.current || isResettingRef.current) return;
+
+      const atEnd = el.scrollLeft >= el.scrollWidth - el.clientWidth - 10;
+      if (atEnd) {
+        isResettingRef.current = true;
+        el.scrollTo({ left: 0, behavior: "smooth" });
+        setTimeout(() => {
+          isResettingRef.current = false;
+        }, 600);
+      } else {
+        el.scrollLeft += AUTO_SCROLL_STEP;
+      }
+      updateScrollState();
+    }, AUTO_SCROLL_INTERVAL);
+  };
+
+  // Start auto-scroll once related products load; clean up on unmount
+  useEffect(() => {
+    if (related.length > 0) startAutoScroll();
+    return () => {
+      stopAutoScroll();
+      if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
+    };
+  }, [related]);
+
+  const handleCarouselMouseEnter = () => {
+    isHoveringCarousel.current = true;
+  };
+  const handleCarouselMouseLeave = () => {
+    isHoveringCarousel.current = false;
+  };
+
+  // Scroll helpers
+  const updateScrollState = () => {
+    const el = carouselRef.current;
+    if (!el) return;
+    setCanScrollLeft(el.scrollLeft > 10);
+    setCanScrollRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 10);
+  };
+
+  // Manual nav: stop auto-scroll, restart it after 2s of inactivity
+  const scheduleResume = () => {
+    stopAutoScroll();
+    if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
+    resumeTimerRef.current = setTimeout(() => {
+      startAutoScroll();
+    }, 2000);
+  };
+
+  const scrollLeft = () => {
+    scheduleResume();
+    carouselRef.current?.scrollBy({ left: -320, behavior: "smooth" });
+    setTimeout(updateScrollState, 350);
+  };
+
+  const scrollRight = () => {
+    scheduleResume();
+    carouselRef.current?.scrollBy({ left: 320, behavior: "smooth" });
+    setTimeout(updateScrollState, 350);
+  };
 
   if (loading) return <Loader fullScreen />;
   if (!product) {
@@ -60,15 +165,20 @@ const ProductDetails = () => {
 
   const handleAdd = async () => {
     const ok = await addToCart(product._id, qty, size, color);
-    if (ok) navigate('/cart');
+    if (ok) navigate("/cart");
   };
 
   return (
     <div className="container-app py-8">
+      {/* Breadcrumb */}
       <nav className="mb-6 text-sm text-gray-500">
-        <Link to="/" className="hover:text-brand-green">Home</Link>
+        <Link to="/" className="hover:text-brand-green">
+          Home
+        </Link>
         <span className="mx-2">/</span>
-        <Link to="/shop" className="hover:text-brand-green">Shop</Link>
+        <Link to="/shop" className="hover:text-brand-green">
+          Shop
+        </Link>
         <span className="mx-2">/</span>
         <Link
           to={`/shop?category=${product.category}`}
@@ -80,7 +190,9 @@ const ProductDetails = () => {
         <span className="text-brand-black dark:text-white">{product.name}</span>
       </nav>
 
+      {/* Product Main */}
       <div className="grid gap-10 lg:grid-cols-2">
+        {/* Images */}
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
@@ -92,7 +204,7 @@ const ProductDetails = () => {
               className="aspect-square w-full object-cover"
               onError={(e) => {
                 e.target.src =
-                  'https://placehold.co/600x600/FFE0EC/D63A75?text=DS+Store';
+                  "https://placehold.co/600x600/FFE0EC/D63A75?text=DS+Store";
               }}
             />
           </div>
@@ -104,8 +216,8 @@ const ProductDetails = () => {
                   onClick={() => setActiveImg(i)}
                   className={`h-20 w-20 flex-shrink-0 overflow-hidden rounded-xl border-2 transition ${
                     i === activeImg
-                      ? 'border-brand-green'
-                      : 'border-transparent opacity-70'
+                      ? "border-brand-green"
+                      : "border-transparent opacity-70"
                   }`}
                 >
                   <img
@@ -119,6 +231,7 @@ const ProductDetails = () => {
           )}
         </motion.div>
 
+        {/* Info */}
         <motion.div
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
@@ -173,8 +286,8 @@ const ProductDetails = () => {
                     onClick={() => setSize(s)}
                     className={`min-w-[3rem] rounded-xl border-2 px-4 py-2 text-sm font-medium transition ${
                       s === size
-                        ? 'border-brand-green bg-brand-green text-white'
-                        : 'border-gray-200 hover:border-brand-green dark:border-gray-700'
+                        ? "border-brand-green bg-brand-green text-white"
+                        : "border-gray-200 hover:border-brand-green dark:border-gray-700"
                     }`}
                   >
                     {s}
@@ -194,8 +307,8 @@ const ProductDetails = () => {
                     onClick={() => setColor(c)}
                     className={`rounded-xl border-2 px-4 py-2 text-sm font-medium transition ${
                       c === color
-                        ? 'border-brand-green bg-brand-green text-white'
-                        : 'border-gray-200 hover:border-brand-green dark:border-gray-700'
+                        ? "border-brand-green bg-brand-green text-white"
+                        : "border-gray-200 hover:border-brand-green dark:border-gray-700"
                     }`}
                   >
                     {c}
@@ -225,13 +338,9 @@ const ProductDetails = () => {
               </button>
             </div>
             <p
-              className={`text-sm font-medium ${
-                product.inStock ? 'text-green-600' : 'text-red-500'
-              }`}
+              className={`text-sm font-medium ${product.inStock ? "text-green-600" : "text-red-500"}`}
             >
-              {product.inStock
-                ? `${product.stock} in stock`
-                : 'Out of stock'}
+              {product.inStock ? `${product.stock} in stock` : "Out of stock"}
             </p>
           </div>
 
@@ -245,14 +354,10 @@ const ProductDetails = () => {
             </button>
             <button
               onClick={() => toggle(product._id)}
-              className={`btn ${
-                inWishlist
-                  ? 'bg-brand-green text-white'
-                  : 'btn-outline'
-              }`}
+              className={`btn ${inWishlist ? "bg-brand-green text-white" : "btn-outline"}`}
               aria-label="Toggle wishlist"
             >
-              <FiHeart className={inWishlist ? 'fill-white' : ''} />
+              <FiHeart className={inWishlist ? "fill-white" : ""} />
             </button>
           </div>
 
@@ -272,9 +377,15 @@ const ProductDetails = () => {
               </div>
             </div>
           </div>
+
+          <PriceComparison
+            productId={product._id}
+            ourPrice={getEffectivePrice(product)}
+          />
         </motion.div>
       </div>
 
+      {/* Reviews */}
       {product.reviews?.length > 0 && (
         <section className="mt-16">
           <h2 className="heading text-2xl">Customer Reviews</h2>
@@ -299,6 +410,82 @@ const ProductDetails = () => {
                 </div>
               </div>
             ))}
+          </div>
+        </section>
+      )}
+
+      {/* Related Products Carousel */}
+      {related.length > 0 && (
+        <section className="mt-16">
+          <div className="mb-6 flex items-center justify-between">
+            <div>
+              <h2 className="heading text-2xl">More from {product.category}</h2>
+              <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                {related.length} products in this category
+              </p>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <button
+                onClick={scrollLeft}
+                disabled={!canScrollLeft}
+                className={`flex h-10 w-10 items-center justify-center rounded-full border-2 transition ${
+                  canScrollLeft
+                    ? "border-brand-green text-brand-green hover:bg-brand-green hover:text-white"
+                    : "cursor-not-allowed border-gray-200 text-gray-300 dark:border-white/10"
+                }`}
+              >
+                <FiChevronLeft size={18} />
+              </button>
+              <button
+                onClick={scrollRight}
+                disabled={!canScrollRight}
+                className={`flex h-10 w-10 items-center justify-center rounded-full border-2 transition ${
+                  canScrollRight
+                    ? "border-brand-green text-brand-green hover:bg-brand-green hover:text-white"
+                    : "cursor-not-allowed border-gray-200 text-gray-300 dark:border-white/10"
+                }`}
+              >
+                <FiChevronRight size={18} />
+              </button>
+
+              <Link
+                to={`/shop?category=${product.category}`}
+                className="hidden items-center gap-1 text-sm font-semibold text-brand-green hover:underline md:flex"
+              >
+                View All <FiArrowRight />
+              </Link>
+            </div>
+          </div>
+
+          <div className="relative">
+            <div
+              ref={carouselRef}
+              onScroll={updateScrollState}
+              onMouseEnter={handleCarouselMouseEnter}
+              onMouseLeave={handleCarouselMouseLeave}
+              className="flex gap-4 overflow-x-auto pb-4 scroll-smooth"
+              style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+            >
+              <style>{`div::-webkit-scrollbar { display: none; }`}</style>
+              {related.map((p, i) => (
+                <div
+                  key={p._id}
+                  className="flex-shrink-0 w-[220px] sm:w-[240px]"
+                >
+                  <ProductCard product={p} index={i} />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="mt-4 text-center md:hidden">
+            <Link
+              to={`/shop?category=${product.category}`}
+              className="inline-flex items-center gap-2 rounded-full border-2 border-brand-green px-6 py-2.5 text-sm font-semibold text-brand-green hover:bg-brand-green hover:text-white transition"
+            >
+              View All {product.category} <FiArrowRight />
+            </Link>
           </div>
         </section>
       )}

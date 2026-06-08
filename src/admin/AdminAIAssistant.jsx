@@ -14,7 +14,7 @@ import {
   FiRefreshCw,
 } from "react-icons/fi";
 
-const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5001";
 
 const CATEGORIES = [
   {
@@ -64,7 +64,7 @@ const CATEGORIES = [
 const buildSystemPrompt = (storeData, category) => {
   const { products, orders, users, chats } = storeData; // extract the store data
 
-  //  Products summary 
+  //  Products summary
   const outOfStock = products.filter(
     (p) => p.inStock === false || p.stock === 0,
   );
@@ -83,7 +83,7 @@ const buildSystemPrompt = (storeData, category) => {
     .slice(0, 5);
   const categories = [...new Set(products.map((p) => p.category))];
 
-  // Orders summary 
+  // Orders summary
   const statusCount = orders.reduce((acc, o) => {
     acc[o.status] = (acc[o.status] || 0) + 1;
     return acc;
@@ -647,7 +647,7 @@ Try asking:
               </div>
               <div
                 className={`max-w-[75%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
-                    msg.role === "user"
+                  msg.role === "user"
                     ? "bg-brand-green text-white rounded-tr-sm"
                     : "bg-gray-50 dark:bg-white/5 text-gray-800 dark:text-gray-100 rounded-tl-sm border border-gray-100 dark:border-white/10"
                 }`}

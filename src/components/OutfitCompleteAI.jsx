@@ -5,7 +5,7 @@ import { useCart } from "../context/CartContext";
 import { buildImageUrl } from "../utils/helpers";
 import toast from "react-hot-toast";
 
-const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5001";
 
 const COLOR_MAP = {
   black: "#1a1a1a",
